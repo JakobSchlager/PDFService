@@ -23,10 +23,10 @@ namespace PDFService.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public ActionResult Get() 
+        public ActionResult Get()
         {
-            const string url = "https://image.tmdb.org/t/p/w500/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg"; 
-            const string moviePicLocation = @"c:\tempImg\img.jpg"; 
+            const string url = "https://image.tmdb.org/t/p/w500/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg";
+            const string moviePicLocation = @"c:\tempImg\img.jpg";
             using (WebClient client = new WebClient())
             {
                 client.DownloadFile(new Uri(url), moviePicLocation);
@@ -53,9 +53,9 @@ namespace PDFService.Controllers
                .AddText(" NAME OF THE THING, DATE AND SO ON HAHAH"); 
             */
 
-            BuildDocument(); 
+            BuildDocument();
 
-            return NoContent(); 
+            return NoContent();
         }
 
         public static void BuildDocument()
@@ -72,7 +72,7 @@ namespace PDFService.Controllers
                     .ToTable();
 
             AddTablePartToCell(table.AddRow().AddCell());
-            
+
             table.AddRow()
                     .AddCell("Kino in Ortschaft, PLZ 0000")
             .ToDocument().Build("Testrun.pdf");
@@ -82,13 +82,13 @@ namespace PDFService.Controllers
         {
             cell.AddTable()
             .SetWidth(XUnit.FromPercent(100))
-            .AddColumnPercentToTable("", 20)
-            .AddColumnPercentToTable("", 60)
-            .AddColumnPercentToTable("", 20)
+            .AddColumnPercentToTable("", 10)
+            .AddColumnPercentToTable("", 70)
+            .AddColumnPercentToTable("", 15)
             .AddRow()
                 .AddCell()
-                    .SetRowSpan(4)
-                    .AddImageToCell(@"c:\tempImg\img.jpg", XSize.FromHeight(250))
+                    .SetRowSpan(3)
+                    .AddImageToCell(@"c:\tempImg\img.jpg", XSize.FromHeight(200))
                     .SetHorizontalAlignment(HorizontalAlignment.Center)
                     .SetVerticalAlignment(VerticalAlignment.Center)
                     .ToRow()
@@ -100,8 +100,53 @@ namespace PDFService.Controllers
                 .AddCellToRow("20.01.2022").SetHorizontalAlignment(HorizontalAlignment.Right).ToTable()
             .AddRow()
                 .AddCellToRow()
-                .AddCell("\n").SetColSpan(2)
-                .SetPadding(0, 32); 
+                .AddCellToRow("Vorname")
+                .AddCellToRow("Nachname").SetHorizontalAlignment(HorizontalAlignment.Right);
         }
+        /*
+        public static void BuildDocument()
+        {
+            var builder = DocumentBuilder.New();
+
+            var table = DocumentBuilder.New()
+                .AddSection()
+                    .AddTable().SetWidth(750)
+                        .AddColumnToTable()
+                        .AddRow()
+                            .AddCell("City information")
+                                .SetHorizontalAlignment(HorizontalAlignment.Center)
+                    .ToTable();
+            AddTablePartToCell(table.AddRow().AddCell());
+            table.AddRow()
+                    .AddCell("Complex table is completed.")
+            .ToDocument().Build("Testrun.pdf");
+        }
+
+        private static void AddTablePartToCell(TableCellBuilder cell)
+        {
+            cell.AddTable()
+            .SetWidth(XUnit.FromPercent(100))
+            .AddColumnPercentToTable("", 30)
+            .AddColumnPercentToTable("", 35)
+            .AddColumnPercentToTable("", 35)
+            .AddRow()
+                .AddCell()
+                    .SetRowSpan(4)
+                    .AddImageToCell(@"c:\tempImg\img.jpg", XSize.FromHeight(250)).ToRow()
+                .AddCellToRow("New York")
+                .AddCellToRow("New York").ToTable()
+            .AddRow()
+                .AddCellToRow()
+                .AddCellToRow("Los Angeles")
+                .AddCellToRow("California").ToTable()
+            .AddRow()
+                .AddCellToRow()
+                .AddCellToRow("Chicago")
+                .AddCellToRow("Illinois").ToTable()
+            .AddRow()
+                .AddCellToRow()
+                .AddCell("\n").SetColSpan(2)
+                          .SetPadding(0, 32);
+        */
     }
 }
