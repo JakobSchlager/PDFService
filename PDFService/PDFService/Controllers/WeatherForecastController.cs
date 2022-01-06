@@ -67,12 +67,14 @@ namespace PDFService.Controllers
                     .AddTable().SetWidth(750)
                         .AddColumnToTable()
                         .AddRow()
-                            .AddCell("City information")
+                            .AddCell("Kino")
                                 .SetHorizontalAlignment(HorizontalAlignment.Center)
                     .ToTable();
+
             AddTablePartToCell(table.AddRow().AddCell());
+            
             table.AddRow()
-                    .AddCell("Complex table is completed.")
+                    .AddCell("Kino in Ortschaft, PLZ 0000")
             .ToDocument().Build("Testrun.pdf");
         }
 
@@ -80,27 +82,26 @@ namespace PDFService.Controllers
         {
             cell.AddTable()
             .SetWidth(XUnit.FromPercent(100))
-            .AddColumnPercentToTable("", 30)
-            .AddColumnPercentToTable("", 35)
-            .AddColumnPercentToTable("", 35)
+            .AddColumnPercentToTable("", 20)
+            .AddColumnPercentToTable("", 60)
+            .AddColumnPercentToTable("", 20)
             .AddRow()
                 .AddCell()
                     .SetRowSpan(4)
-                    .AddImageToCell(@"c:\tempImg\img.jpg").ToRow()
-                .AddCellToRow("New York")
-                .AddCellToRow("New York").ToTable()
+                    .AddImageToCell(@"c:\tempImg\img.jpg", XSize.FromHeight(250))
+                    .SetHorizontalAlignment(HorizontalAlignment.Center)
+                    .SetVerticalAlignment(VerticalAlignment.Center)
+                    .ToRow()
+                .AddCell("Title").SetFontSize(20).SetColSpan(2)
+                .ToTable()
             .AddRow()
                 .AddCellToRow()
-                .AddCellToRow("Los Angeles")
-                .AddCellToRow("California").ToTable()
-            .AddRow()
-                .AddCellToRow()
-                .AddCellToRow("Chicago")
-                .AddCellToRow("Illinois").ToTable()
+                .AddCellToRow("Raum 2, Sitzplatz 12").SetFontSize(15)
+                .AddCellToRow("20.01.2022").SetHorizontalAlignment(HorizontalAlignment.Right).ToTable()
             .AddRow()
                 .AddCellToRow()
                 .AddCell("\n").SetColSpan(2)
-                          .SetPadding(0, 32);
+                .SetPadding(0, 32); 
         }
     }
 }
