@@ -1,37 +1,21 @@
-using Aspose.BarCode.Generation;
+﻿using Aspose.BarCode.Generation;
 using Gehtsoft.PDFFlow.Builder;
 using Gehtsoft.PDFFlow.Models.Enumerations;
 using Gehtsoft.PDFFlow.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace PDFService.Controllers
+namespace PDFServiceService
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class PDFCreatorService
     {
         const string barcodeFile = "barcode.jpg";
-        private static readonly string[] Summaries = new[]
+        const string moviePicLocation = @"c:\tempImg\img.jpg";
+        public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public ActionResult Get()
-        {
-            GenerateBarcode("12345567");
-            DownloadMoviePicture();
-            BuildDocument();
-
-            return NoContent();
+            GenerateBarcode(ticketId.ToString());
+            DownloadMoviePicture(moviepicUrl);
+            BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
         }
 
         private void GenerateBarcode(string id)
@@ -44,17 +28,14 @@ namespace PDFService.Controllers
             generator.Save(barcodeFile, BarCodeImageFormat.Jpeg);
         }
 
-        private static void DownloadMoviePicture()
+        private void DownloadMoviePicture(string url)
         {
-            const string url = "https://image.tmdb.org/t/p/w500/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg";
-            const string moviePicLocation = @"c:\tempImg\img.jpg";
             using (WebClient client = new WebClient())
             {
                 client.DownloadFile(new Uri(url), moviePicLocation);
             }
         }
-
-        public static void BuildDocument()
+        private void BuildDocument(string firstname, string lastname, string title, string room, string seat, string date, string address)
         {
             var builder = DocumentBuilder.New();
 
@@ -67,14 +48,14 @@ namespace PDFService.Controllers
                                 .SetHorizontalAlignment(HorizontalAlignment.Center)
                     .ToTable();
 
-            AddTablePartToCell(table.AddRow().AddCell());
+            AddTablePartToCell(table.AddRow().AddCell(), firstname, lastname, title, room, seat, date, address);
 
             table.AddRow()
-                    .AddCell("Kino in Ortschaft, PLZ 0000")
+                    .AddCell(address)
             .ToDocument().Build("Testrun.pdf");
         }
 
-        private static void AddTablePartToCell(TableCellBuilder cell)
+        private void AddTablePartToCell(TableCellBuilder cell, string firstname, string lastname, string title, string room, string seat, string date, string address)
         {
             cell.AddTable()
             .SetWidth(XUnit.FromPercent(100))
@@ -88,12 +69,12 @@ namespace PDFService.Controllers
                     .SetHorizontalAlignment(HorizontalAlignment.Center)
                     .SetVerticalAlignment(VerticalAlignment.Center)
                     .ToRow()
-                .AddCell("Title").SetFontSize(20).SetColSpan(2)
+                .AddCell(title).SetFontSize(20).SetColSpan(2)
                 .ToTable()
             .AddRow()
                 .AddCellToRow()
-                .AddCellToRow("Raum 2, Sitzplatz 12").SetFontSize(15)
-                .AddCellToRow("20.01.2022").SetHorizontalAlignment(HorizontalAlignment.Right).ToTable()
+                .AddCellToRow($"Raum {room}, Sitzplatz {seat}").SetFontSize(15)
+                .AddCellToRow(date).SetHorizontalAlignment(HorizontalAlignment.Right).ToTable()
             .AddRow()
                 .AddCellToRow()
                 .AddCell()
@@ -101,7 +82,7 @@ namespace PDFService.Controllers
                     .SetHorizontalAlignment(HorizontalAlignment.Center)
                     .SetVerticalAlignment(VerticalAlignment.Center)
                     .ToRow()
-                .AddCellToRow("Vorname Nachname").SetHorizontalAlignment(HorizontalAlignment.Right);
+                .AddCellToRow($"{firstname} {lastname}").SetHorizontalAlignment(HorizontalAlignment.Right);
         }
     }
 }
