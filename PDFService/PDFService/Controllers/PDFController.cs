@@ -15,7 +15,7 @@ namespace PDFService.Controllers
         }
         
         [HttpGet]
-        public ActionResult<string> GetPdfUrl()
+        public ActionResult<string> GetPdfUrl(int ticketId, string title, string picUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
             pdfCreatorService.GeneratePDF(1, 
                 "Title", 

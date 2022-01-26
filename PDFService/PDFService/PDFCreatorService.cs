@@ -4,6 +4,7 @@ using Gehtsoft.PDFFlow.Models.Enumerations;
 using Gehtsoft.PDFFlow.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using TicketService.Events;
 
 namespace PDFServiceService
 {
@@ -16,6 +17,19 @@ namespace PDFServiceService
             GenerateBarcode(ticketId.ToString());
             DownloadMoviePicture(moviepicUrl);
             BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
+        }
+
+        public void GeneratePDF(TicketCreatedEvent ticketCreatedEvent)
+        {
+            GenerateBarcode(ticketCreatedEvent.TicketId.ToString());
+            DownloadMoviePicture(ticketCreatedEvent.MoviePicUrl);
+            BuildDocument(ticketCreatedEvent.Firstname,
+               ticketCreatedEvent.Lastname,
+               ticketCreatedEvent.MovieTitle,
+               ticketCreatedEvent.Room.ToString(),
+               ticketCreatedEvent.Seat.ToString(),
+               ticketCreatedEvent.Date,
+               ticketCreatedEvent.Address);
         }
 
         private void GenerateBarcode(string id)
