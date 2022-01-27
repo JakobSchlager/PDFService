@@ -22,9 +22,11 @@ namespace PDFService.Services
         const string moviePicLocation = @"c:\tempImg\img.jpg";
         public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
-            Console .WriteLine("PDFCreatorService::GeneratePDF"); 
+            Console.WriteLine("PDFCreatorService::GeneratePDF"); 
             GenerateBarcode(ticketId.ToString());
+            Console.WriteLine("PDFCreatorService::GenerateBarcoode worked!"); 
             DownloadMoviePicture(moviepicUrl);
+            Console.WriteLine("PDFCreatorService::DownloadMoviePicutre worked!"); 
             BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
 
             Console.WriteLine("PDFCreated, sending out event!"); 
