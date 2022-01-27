@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
+RUN apt-get update && apt-get install -y libgdiplus
+
 WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://+:5000
