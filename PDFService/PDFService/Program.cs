@@ -20,7 +20,7 @@ builder.Services.AddMassTransit(x =>
             h.Password(queueSettings.Password);
         });
         cfg.ConfigureEndpoints(context);
-        cfg.ReceiveEndpoint(x => x.Consumer<TicketCreatedEventConsumer>()); 
+        cfg.ReceiveEndpoint("TicketCreated_queue", x => x.Consumer<TicketCreatedEventConsumer>()); 
     });
 });
 builder.Services.AddMassTransitHostedService();
