@@ -23,6 +23,7 @@ namespace PDFService.Services
         public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
             Console.WriteLine("PDFCreatorService::GeneratePDF"); 
+            Console.WriteLine("PDFCreatorService::GenerateBarcoode is called"); 
             GenerateBarcode(ticketId.ToString());
             Console.WriteLine("PDFCreatorService::GenerateBarcoode worked!"); 
             DownloadMoviePicture(moviepicUrl);
