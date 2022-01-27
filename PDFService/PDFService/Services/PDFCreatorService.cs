@@ -38,16 +38,16 @@ namespace PDFService.Services
 
         public void GeneratePDF(TicketCreatedEvent ticketCreatedEvent)
         {
-            GenerateBarcode(ticketCreatedEvent.TicketId.ToString());
-            DownloadMoviePicture(ticketCreatedEvent.MoviePicUrl);
-            BuildDocument(ticketCreatedEvent.Firstname,
-               ticketCreatedEvent.Lastname,
-               ticketCreatedEvent.MovieTitle,
-               ticketCreatedEvent.Room.ToString(),
-               ticketCreatedEvent.Seat.ToString(),
-               ticketCreatedEvent.Date,
-               ticketCreatedEvent.Address);
-        }
+            GeneratePDF(ticketCreatedEvent.TicketId,
+                ticketCreatedEvent.MovieTitle,
+                ticketCreatedEvent.MoviePicUrl,
+                ticketCreatedEvent.Seat,
+                ticketCreatedEvent.Room,
+                ticketCreatedEvent.Date,
+                ticketCreatedEvent.Firstname,
+                ticketCreatedEvent.Lastname,
+                ticketCreatedEvent.Address);
+        } 
 
         private void GenerateBarcode(string id)
         {
