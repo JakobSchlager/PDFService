@@ -7,11 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// basic configure services
+builder.Services.AddScoped<PDFCreatorService>(); 
+
 // Masstransit RabbitMQ
 var queueSettings = builder.Configuration.GetSection("RabbitMQ:QueueSettings").Get<QueueSettings>();
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<TicketCreatedEventConsumer>().Endpoint(x => x.Name = "TicketCreated_queue");
+
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(queueSettings.HostName, queueSettings.VirtualHost, h =>
@@ -20,14 +25,10 @@ builder.Services.AddMassTransit(x =>
             h.Password(queueSettings.Password);
         });
         cfg.ConfigureEndpoints(context);
-        cfg.ReceiveEndpoint("TicketCreated_queue", x => x.Consumer<TicketCreatedEventConsumer>()); 
     });
 });
 builder.Services.AddMassTransitHostedService();
 
-// basic configure services
-
-builder.Services.AddScoped<PDFCreatorService>(); 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -17,9 +17,15 @@ public class TicketCreatedEvent
 
 public class TicketCreatedEventConsumer : IConsumer<TicketCreatedEvent>
 {
+    private readonly PDFCreatorService _pdfCreatorService; 
+    public TicketCreatedEventConsumer(PDFCreatorService pdfCreatorService)
+    {
+        this._pdfCreatorService = pdfCreatorService; 
+    }
+
     public async Task Consume(ConsumeContext<TicketCreatedEvent> context)
     {
         Console.WriteLine("TicketCreated: " + context.Message.MovieTitle);
-        new PDFCreatorService().GeneratePDF(context.Message);
+        _pdfCreatorService.GeneratePDF(context.Message);
     }
 }
