@@ -2,14 +2,22 @@
 using Gehtsoft.PDFFlow.Builder;
 using Gehtsoft.PDFFlow.Models.Enumerations;
 using Gehtsoft.PDFFlow.Models.Shared;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using PDFService.Events;
 using System.Net;
 using TicketService.Events;
 
-namespace PDFServiceService
+namespace PDFService.Services
 {
     public class PDFCreatorService
     {
+        private readonly IBus _bus; 
+        public PDFCreatorService(IBus bus)
+        {
+            this._bus = bus;
+        }
+
         const string barcodeFile = "barcode.jpg";
         const string moviePicLocation = @"c:\tempImg\img.jpg";
         public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
@@ -17,6 +25,12 @@ namespace PDFServiceService
             GenerateBarcode(ticketId.ToString());
             DownloadMoviePicture(moviepicUrl);
             BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
+
+            _bus.Publish(new PDFCreatedEvent
+            {
+                Email = "jakobschlager.biz@gmail.com", 
+                TicketId = 1, 
+            });
         }
 
         public void GeneratePDF(TicketCreatedEvent ticketCreatedEvent)

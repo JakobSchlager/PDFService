@@ -1,4 +1,4 @@
-﻿namespace TicketService
+﻿namespace PDFService
 {
     public class QueueSettings
     {

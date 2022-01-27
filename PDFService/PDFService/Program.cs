@@ -1,7 +1,7 @@
-using PDFServiceService;
+using PDFService.Services;
 using MassTransit;
-using TicketService;
 using TicketService.Events;
+using PDFService;
 
 var builder = WebApplication.CreateBuilder(args);
 
