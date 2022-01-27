@@ -26,6 +26,7 @@ public class TicketCreatedEventConsumer : IConsumer<TicketCreatedEvent>
     public async Task Consume(ConsumeContext<TicketCreatedEvent> context)
     {
         Console.WriteLine("TicketCreated: " + context.Message.MovieTitle);
+        Console.WriteLine("logging _pdfCreatorService: " + _pdfCreatorService);
         _pdfCreatorService.GeneratePDF(context.Message);
     }
 }
