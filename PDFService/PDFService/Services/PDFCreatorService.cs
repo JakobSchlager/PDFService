@@ -23,20 +23,14 @@ namespace PDFService.Services
         public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
             Console.WriteLine("PDFCreatorService::GeneratePDF"); 
-            Console.WriteLine("PDFCreatorService::GenerateBarcoode is called"); 
             GenerateBarcode(ticketId.ToString());
-            Console.WriteLine("PDFCreatorService::GenerateBarcoode worked!"); 
             DownloadMoviePicture(moviepicUrl);
-            Console.WriteLine("PDFCreatorService::DownloadMoviePicutre worked!"); 
             BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
-
-            Console.WriteLine("PDFCreated, sending out event!"); 
             _bus.Publish(new PDFCreatedEvent
             {
-                Email = "jakobschlager.biz@gmail.com", 
-                TicketId = 1, 
+                Email = firstname, 
+                TicketId = ticketId, 
             });
-            Console.WriteLine("PDFCreated, sent out event!"); 
         }
 
         public void GeneratePDF(TicketCreatedEvent ticketCreatedEvent)

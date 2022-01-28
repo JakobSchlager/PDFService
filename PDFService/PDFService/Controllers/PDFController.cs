@@ -17,14 +17,14 @@ namespace PDFService.Controllers
         [HttpGet]
         public ActionResult<string> GetPdfUrl(int ticketId, string title, string picUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
-            pdfCreatorService.GeneratePDF(1, 
-                "Title", 
-                "https://image.tmdb.org/t/p/w500/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg", 
-                23, 
-                2, 
-                "20.01.2022", 
-                "Jakob", 
-                "Schlager", 
+            pdfCreatorService.GeneratePDF(ticketId, 
+                title, 
+                picUrl, 
+                seat, 
+                room, 
+                date, 
+                firstname, 
+                lastname, 
                 "Kino in Ortschaft, PLZ 0000"); 
             return Ok(); 
         }
