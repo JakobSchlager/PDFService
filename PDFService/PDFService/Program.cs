@@ -15,7 +15,7 @@ builder.Services.AddScoped<PDFCreatorService>();
 // Masstransit RabbitMQ
 var queueSettings = builder.Configuration.GetSection("RabbitMQ:QueueSettings").Get<QueueSettings>();
 
-IMessageDataRepository messageDataRepository = new MongoDbMessageDataRepository("mongodb://localhost:27017/", "pdfdata"); 
+IMessageDataRepository messageDataRepository = new MongoDbMessageDataRepository("localhost:27017", "pdfdata"); 
 builder.Services.AddSingleton(messageDataRepository);
 builder.Services.AddMassTransit(x =>
 {
