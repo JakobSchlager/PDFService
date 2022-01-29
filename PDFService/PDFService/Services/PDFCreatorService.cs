@@ -3,6 +3,7 @@ using Gehtsoft.PDFFlow.Builder;
 using Gehtsoft.PDFFlow.Models.Enumerations;
 using Gehtsoft.PDFFlow.Models.Shared;
 using MassTransit;
+using MassTransit.MessageData;
 using Microsoft.AspNetCore.Mvc;
 using PDFService.Events;
 using System.Net;
@@ -12,26 +13,29 @@ namespace PDFService.Services
 {
     public class PDFCreatorService
     {
-        private readonly IBus _bus; 
-        public PDFCreatorService(IBus bus)
+        private readonly IBus _bus;
+        private readonly IMessageDataRepository _messageDataRepository;
+        public PDFCreatorService(IBus bus, IMessageDataRepository messageDataRepository)
         {
             this._bus = bus;
+            this._messageDataRepository = messageDataRepository;
         }
 
         const string barcodeFile = "barcode.jpg";
         const string moviePicLocation = @"c:\tempImg\img.jpg";
-        public void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
+        public async void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
         {
             Console.WriteLine("PDFCreatorService::GeneratePDF"); 
             GenerateBarcode(ticketId.ToString());
             DownloadMoviePicture(moviepicUrl);
             var document = BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
-            _bus.Publish<PDFCreatedEvent>(new 
+            _bus.Publish(new PDFCreatedEvent
             {
-                Email = firstname, 
-                TicketId = ticketId, 
-                Document = document, 
+                Email = firstname,
+                TicketId = ticketId,
+                Document = await _messageDataRepository.PutBytes(document, TimeSpan.FromDays(1)), 
             });
+            Console.WriteLine("Sent out PDFCreatedEvent"); 
         }
 
         public void GeneratePDF(TicketCreatedEvent ticketCreatedEvent)

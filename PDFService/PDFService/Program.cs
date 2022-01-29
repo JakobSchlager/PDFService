@@ -16,6 +16,7 @@ builder.Services.AddScoped<PDFCreatorService>();
 var queueSettings = builder.Configuration.GetSection("RabbitMQ:QueueSettings").Get<QueueSettings>();
 
 IMessageDataRepository messageDataRepository = new MongoDbMessageDataRepository("mongodb://localhost:27017/", "pdfdata"); 
+builder.Services.AddSingleton(messageDataRepository);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<TicketCreatedEventConsumer>().Endpoint(x => x.Name = "TicketCreated_queue");
