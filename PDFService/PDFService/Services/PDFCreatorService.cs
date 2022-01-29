@@ -29,6 +29,7 @@ namespace PDFService.Services
             GenerateBarcode(ticketId.ToString());
             DownloadMoviePicture(moviepicUrl);
             var document = BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
+            Console.WriteLine("Right before publish, documnet:" + document.ToString()); 
             _bus.Publish(new PDFCreatedEvent
             {
                 Email = firstname,
