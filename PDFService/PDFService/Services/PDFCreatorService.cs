@@ -25,11 +25,12 @@ namespace PDFService.Services
             Console.WriteLine("PDFCreatorService::GeneratePDF"); 
             GenerateBarcode(ticketId.ToString());
             DownloadMoviePicture(moviepicUrl);
-            BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
-            _bus.Publish(new PDFCreatedEvent
+            var document = BuildDocument(firstname, lastname, movieTitle, room.ToString(), seat.ToString(), date, address);
+            _bus.Publish<PDFCreatedEvent>(new 
             {
                 Email = firstname, 
                 TicketId = ticketId, 
+                Document = document, 
             });
         }
 
@@ -63,8 +64,9 @@ namespace PDFService.Services
                 client.DownloadFile(new Uri(url), moviePicLocation);
             }
         }
-        private void BuildDocument(string firstname, string lastname, string title, string room, string seat, string date, string address)
+        private byte[] BuildDocument(string firstname, string lastname, string title, string room, string seat, string date, string address)
         {
+            const string pdfFileName = "Ticket.pdf";
             var builder = DocumentBuilder.New();
 
             var table = DocumentBuilder.New()
@@ -80,7 +82,9 @@ namespace PDFService.Services
 
             table.AddRow()
                     .AddCell(address)
-            .ToDocument().Build("Testrun.pdf");
+            .ToDocument().Build(pdfFileName);
+
+            return File.ReadAllBytes(pdfFileName);
         }
 
         private void AddTablePartToCell(TableCellBuilder cell, string firstname, string lastname, string title, string room, string seat, string date, string address)

@@ -2,6 +2,8 @@ using PDFService.Services;
 using MassTransit;
 using TicketService.Events;
 using PDFService;
+using MassTransit.MessageData;
+using MassTransit.MongoDbIntegration.MessageData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +15,14 @@ builder.Services.AddScoped<PDFCreatorService>();
 // Masstransit RabbitMQ
 var queueSettings = builder.Configuration.GetSection("RabbitMQ:QueueSettings").Get<QueueSettings>();
 
+IMessageDataRepository messageDataRepository = new MongoDbMessageDataRepository("mongodb://localhost:27017/", "pdfdata"); 
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<TicketCreatedEventConsumer>().Endpoint(x => x.Name = "TicketCreated_queue");
 
     x.UsingRabbitMq((context, cfg) =>
     {
+        cfg.UseMessageData(messageDataRepository);
         cfg.Host(queueSettings.HostName, queueSettings.VirtualHost, h =>
         {
             h.Username(queueSettings.UserName);
