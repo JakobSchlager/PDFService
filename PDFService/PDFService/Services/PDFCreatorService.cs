@@ -23,7 +23,7 @@ namespace PDFService.Services
 
         const string barcodeFile = "barcode.jpg";
         const string moviePicLocation = @"c:\tempImg\img.jpg";
-        public async void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string address)
+        public async void GeneratePDF(int ticketId, string movieTitle, string moviepicUrl, int seat, int room, string date, string firstname, string lastname, string email, string address)
         {
             Console.WriteLine("PDFCreatorService::GeneratePDF"); 
             GenerateBarcode(ticketId.ToString());
@@ -32,7 +32,7 @@ namespace PDFService.Services
             Console.WriteLine("Right before publish, documnet:" + document.ToString()); 
             _bus.Publish(new PDFCreatedEvent
             {
-                Email = firstname,
+                Email = email,
                 TicketId = ticketId,
                 Document = await _messageDataRepository.PutBytes(document, TimeSpan.FromDays(1)), 
             });
@@ -49,6 +49,7 @@ namespace PDFService.Services
                 ticketCreatedEvent.Date,
                 ticketCreatedEvent.Firstname,
                 ticketCreatedEvent.Lastname,
+                ticketCreatedEvent.Email, 
                 ticketCreatedEvent.Address);
         } 
 

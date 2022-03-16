@@ -15,7 +15,7 @@ namespace PDFService.Controllers
         }
         
         [HttpGet]
-        public ActionResult<string> GetPdfUrl(int ticketId, string title, string picUrl, int seat, int room, string date, string firstname, string lastname, string address)
+        public ActionResult<string> GetPdfUrl(int ticketId, string title, string picUrl, int seat, int room, string date, string firstname, string lastname, string email, string address)
         {
             pdfCreatorService.GeneratePDF(ticketId, 
                 title, 
@@ -25,6 +25,7 @@ namespace PDFService.Controllers
                 date, 
                 firstname, 
                 lastname, 
+                email, 
                 "Kino in Ortschaft, PLZ 0000"); 
             return Ok(); 
         }
