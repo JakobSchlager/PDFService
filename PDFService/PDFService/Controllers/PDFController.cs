@@ -26,7 +26,8 @@ namespace PDFService.Controllers
                 firstname, 
                 lastname, 
                 email, 
-                "Kino in Ortschaft, PLZ 0000"); 
+                address
+            ); 
             return Ok(); 
         }
     }

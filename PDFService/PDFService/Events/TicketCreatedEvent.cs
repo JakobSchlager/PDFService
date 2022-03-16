@@ -2,6 +2,7 @@
 using PDFService.Services;
 
 namespace TicketService.Events;
+
 public class TicketCreatedEvent
 {
     public int TicketId { get; set; }
