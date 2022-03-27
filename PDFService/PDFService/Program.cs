@@ -22,7 +22,6 @@ if(rabbitmqHostname != null)
 Console.WriteLine($"queueSettings.HostName = {queueSettings.HostName}");
 
 IMessageDataRepository messageDataRepository = new MongoDbMessageDataRepository("mongodb://admin:password@localhost:27017", "pdfdata");
-builder.Services.AddSingleton(messageDataRepository);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<TicketCreatedEventConsumer>().Endpoint(x => x.Name = "TicketCreated_queue");
